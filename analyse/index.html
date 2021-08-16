@@ -1,0 +1,185 @@
+<html>
+    <head>
+        <title>GeoMapper</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="../js/jquery.js"></script>
+        <script src="../js/d3.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+        <link rel="stylesheet" type="text/css" href="../css/site.css"/>
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/esri-leaflet@3.0.1/dist/esri-leaflet.js"
+            integrity="sha512-JmpptMCcCg+Rd6x0Dbg6w+mmyzs1M7chHCd9W8HPovnImG2nLAQWn3yltwxXRM7WjKKFFHOAKjjF2SC4CgiFBg=="
+            crossorigin=""></script>
+        <script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>        
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DJ8V7N3T9X"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-DJ8V7N3T9X',{'debug_mode':true});
+        </script>      
+    </head>
+    <body>
+        <div id="content" class="container-fluid">
+            <div id="menu-bar" class="row">
+                <div class="col-sm-6">
+                    <p><a href="../">GeoMapper V0.1</a></p>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <p><span class="menu-item"><a href="https://docs.google.com/forms/d/e/1FAIpQLScKuAKWNHFGPEfTHJuM5_SO4nxsNPti4HgYZDqJYRbst5qSNA/viewform" target="_blank">Feedback</a></span><span class="menu-item"><a href="../about/">About</a></span></p>
+                </div>
+            </div>
+            <div id="step1" class="row">
+                <div id="postcodes_entry" class="offset-md-1 col-md-10">
+                    <p class="instruction-header">1. Select the type of data your are inputting</p>
+                    <p>
+                        <input type="radio" id="datatype" name="datatype" value="postcode">
+                        <label for="postcode">Postcodes Data</label><br>
+                        <input type="radio" id="datatype" name="datatype" value="table">
+                        <label for="table">Table Data</label><br>
+                    </p>
+                    <p class="instruction-header">2. Load your postcode data</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>Copy and paste your data from other applications or websites. Each postcode should be on a new line. We recommend no more than 1000 postcodes at a time.</p>
+                            <textarea id="postcode_entry_text" name="postcode_entry_text" rows="15" cols="30"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <button id="process-postcodes" class="btn btn-app process-postcodes">Map Postcodes</button>
+                            <div id="analysis-progress">
+                                <p>Processed: <span id="progress"></span></p>
+                            </div>
+                            <div id="analysis-finished">
+                                <p><span id="error-count"></span> postcodes could not be mapped. Correct these postcodes or continue without them. Please note that this tools only works for postcodes located in England.</p>
+                                 <button class="btn btn-app process-postcodes">Retry postcodes</button> <button id="continue" class="btn btn-app">Continue without these postcodes</button>
+                                <p id="errorstitle" class="instruction-header">Postcode errors:</p>
+                                <div id="errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="step2" class="row">
+                <div class="offset-md-1 col-md-10"">
+                    <p class="instruction-header">2. Select the view to start with:</p> 
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h3 id="dataset-title"></h3>
+                            <p id="dataset-definition"></p>
+                            <p><a id="dataset-source" class="link-highlight" href="" target="_blank">Data source</a></p>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-4 datatopic">
+                                    <button class="btn btn-app btn-datatopic" data-id="IMD">
+                                        Indices of Multiple Deprivation 2019
+                                    </button>
+                                </div>
+                                <div class="col-md-4 datatopic">
+                                    <button class="btn btn-app btn-datatopic" data-id="Income">
+                                        Income Deprivation
+                                    </button>
+                                </div>
+                                <div class="col-md-4 datatopic">
+                                    <button class="btn btn-app btn-datatopic" data-id="Employment">
+                                        Employment Deprivation
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 datatopic">
+                                    <button class="btn btn-app btn-datatopic" data-id="Education">
+                                        Education, Skills and Training Deprivation
+                                    </button>
+                                </div>
+                                <div class="col-md-4 datatopic">
+                                     <button class="btn btn-app btn-datatopic" data-id="Health">
+                                        Health Deprivation and Disability
+                                    </button>
+                                </div>
+                                <div class="col-md-4 datatopic">
+                                    <button class="btn btn-app btn-datatopic" data-id="Crime">
+                                        Crime
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 datatopic">
+                                    <button class="btn btn-app btn-datatopic" data-id="Housing">
+                                        Barriers to Housing and Services
+                                    </button>
+                                </div>
+                                <div class="col-md-4 datatopic">
+                                    <button class="btn btn-app btn-datatopic" data-id="Environment">
+                                        Living Environment Deprivation
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="step3" class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12 toolbar-section">
+                            <h1 id="title" class="toolbar-section"></h1>
+                            <h2>Summary</h2>
+                            <p id="gen-text"></p>
+                        </div>
+                        <div class="col-md-12 toolbar-section">
+                            <h2>Count By Decile</h2>
+                            <p>(Decile 1 = <span id="decile1def"></span>, Decile 10 = <span id="decile10def"></span>)</p>
+                            <div id="barchart">
+                            </div>
+                        </div>
+                        <div class="col-md-12 toolbar-section">
+                            <h2>Average Rank Decile</h2>
+                            <div id="averageRank"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <h2>Definition</h2>
+                            <p id="definition">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            <p><a id="datasource" class="link-highlight" href="" target="_blank">Data Source</a></p>
+                        </div>
+                        <div class="col-md-12 toolbar-section">
+                            <button id="download-data" class="btn btn-app">Download Data</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="row data-navigation">
+                        <div class="col-md-12">
+                            <button class="btn btn-app btn-data btn-active" data-id="IMD">IMD 2019<br/><wbr></button>
+                            <button class="btn btn-app btn-data" data-id="Income">Income<br/><wbr></button>
+                            <button class="btn btn-app btn-data" data-id="Employment">Employment<br/><wbr></button>
+                            <button class="btn btn-app btn-data" data-id="Education">Education +<br/ ><wbr></button>
+                            <button class="btn btn-app btn-data" data-id="Health">Health and<br/>Disability</button>
+                            <button class="btn btn-app btn-data" data-id="Crime">Crime<br/><wbr></button>
+                            <button class="btn btn-app btn-data" data-id="Housing">Housing and<br/>Services</button>
+                            <button class="btn btn-app btn-data" data-id="Environment">Living<br/>environment</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="map"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="footer" class="row">
+                <div class="col-md-12 text-center">
+                    <p>An initiative of Catalyst in collaboration with Hetco Design, part of the Catalyst and The National Lottery Community Fund COVID-19 Digital Response</p>
+                    <p>This is an open source project. See the <a class="link-highlight" href="">github repository</a> for more information.</p>
+                    <img class="footer-logo" height="30px" src="../images/data-collective.png" /><img class="footer-logo" height="20px" src="../images/DataKindUK.png" /><img class="footer-logo" height="50px" src="../images/hetco.png" />
+                </div>
+            </div>
+        </div>
+        <script src="../js/map.js"></script>
+        <script src="../js/site.js"></script>
+    </body>
+</html>

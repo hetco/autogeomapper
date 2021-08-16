@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <title>Geomapper</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="css/site.css"/>
+        <script src="js/jquery.js"></script>
+        <script src="js/d3.min.js"></script>
+        <!-- CSS only -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/esri-leaflet@3.0.1/dist/esri-leaflet.js"
+            integrity="sha512-JmpptMCcCg+Rd6x0Dbg6w+mmyzs1M7chHCd9W8HPovnImG2nLAQWn3yltwxXRM7WjKKFFHOAKjjF2SC4CgiFBg=="
+            crossorigin=""></script>
+        <script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>        
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DJ8V7N3T9X"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-DJ8V7N3T9X');
+        </script>         
+    </head>
+    <body>
+        <div id="content" class="container-fluid">
+            <div id="menu-bar" class="row">
+                <div class="col-sm-6">
+                    <p><a href="#">Geomapper V0.1</a></p>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <p><span class="menu-item"><a href="https://docs.google.com/forms/d/e/1FAIpQLScKuAKWNHFGPEfTHJuM5_SO4nxsNPti4HgYZDqJYRbst5qSNA/viewform" target="_blank">Feedback</a></span><span class="menu-item"><a href="about/">About</a></span></p>
+                </div>
+            </div>
+            <div id="frontpage-section-1" class="row frontpage-section">
+                <div class="col-md-6">
+                    <img src="images/front-page.png" width="100%" alt="satelite image of a neighbourhood in england" />
+                </div>
+                <div id="main-description" class="offset-md-1 col-md-3">
+                    <h1 class="frontpagetitle">Geomapper V0.1</h1>
+                    <p class="frontpagesubtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <a href="#frontpage-section-2"><button class="btn btn-app">Learn More</button></a> <a href="analyse/"><button class="btn btn-app btn-highlight">Use now</button></a>
+                </div>
+            </div>
+            <div id="frontpage-section-2" class="row frontpage-section">
+                <div class="offset-md-1 col-md-4">
+                    <p class="instruction-header">1. Lorem ipsum dolor</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+                    <p class="instruction-header">Your data is safe.</p>
+                    <p>Even though GeoMapper is a web app, the data you insert will be processed only by the web browser. No server-side operations or storages are performed, no one will see, touch or copy your data!</p>
+                    <p>
+                </div>
+                <div class="offset-md-1 col-md-5">
+                    <img src = "images/screen1.png" alt="input form with postcodes" width="500" class="frontpagescreen" />
+                </div>
+            </div>
+            <div id="frontpage-section-3" class="row frontpage-section">
+                <div class="offset-md-1 col-md-5">
+                    <img src = "images/screen2.png" class="leftimage frontpagescreen" alt="topic selection screen" width="500" />
+                </div>
+                <div class="offset-md-1 col-md-4">
+                    <p class="instruction-header">2. Lorem ipsum dolor.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>                     
+                </div>
+            </div>
+            <div id="frontpage-section-4" class="row frontpage-section">
+                <div class="offset-md-1 col-md-4">
+                    <p class="instruction-header">3. Lorem ipsum dolor.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+                <div class="offset-md-1 col-md-5">
+                    <img src = "images/screen3.png" alt="Analysis page screen" width="500" class="frontpagescreen" />
+                </div>                  
+            </div>
+            <div id="footer" class="row">
+                <div class="col-md-12 text-center">
+                    <p></p>
+                    <p>This is an open source project. See the <a class="link-highlight" href="">github repository</a> for more information.</p>
+                    <img class="footer-logo" height="30px" src="images/data-collective.png" /><img class="footer-logo" height="20px" src="images/DataKindUK.png" /><img class="footer-logo" height="50px" src="images/hetco.png" />
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
