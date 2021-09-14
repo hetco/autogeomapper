@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Geomapper</title>
+        <title>AutoMapper</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -28,7 +28,7 @@
         <div id="content" class="container-fluid">
             <div id="menu-bar" class="row">
                 <div class="col-sm-6">
-                    <p><a href="#">Geomapper V0.1</a></p>
+                    <p><a href="#">AutoMapper V0.1</a></p>
                 </div>
                 <div class="col-sm-6 text-right">
                     <p><span class="menu-item"><a href="https://docs.google.com/forms/d/e/1FAIpQLScKuAKWNHFGPEfTHJuM5_SO4nxsNPti4HgYZDqJYRbst5qSNA/viewform" target="_blank">Feedback</a></span><span class="menu-item"><a href="about/">About</a></span></p>
@@ -39,15 +39,21 @@
                     <img src="images/front-page.png" width="100%" alt="satelite image of a neighbourhood in england" />
                 </div>
                 <div id="main-description" class="offset-md-1 col-md-3">
-                    <h1 class="frontpagetitle">Geomapper V0.1</h1>
-                    <p class="frontpagesubtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <h1 class="frontpagetitle">Automapper V0.1</h1>
+                    <p class="frontpagesubtitle">Match your data against existing UK ward or local authority boundaries and create an easy-to-read shaded map.</p>
                     <a href="#frontpage-section-2"><button class="btn btn-app">Learn More</button></a> <a href="analyse/"><button class="btn btn-app btn-highlight">Use now</button></a>
                 </div>
             </div>
             <div id="frontpage-section-2" class="row frontpage-section">
                 <div class="offset-md-1 col-md-4">
-                    <p class="instruction-header">1. Lorem ipsum dolor</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <p class="instruction-header">1. Copy and paste your data</p>
+                    <p>Two ways to use Automapper</p> 
+                    <p><b>Datasets with names</b><br />
+                    Create a dataset with TWO columns. (Download the template - .csv, .XLSX, Google Sheets)<br />Column one should contain the ward or the Local Authority name.<br />
+                    Column two should contain the attribute (numbers only) that you want to map.<br />
+                    <p>Copy and paste the dataset into the Automapper.<br />
+                    <p><b>List of Postcodes</b><br />
+                    Copy and paste a list of postcodes into the Automapper</p>
 
                     <p class="instruction-header">Your data is safe.</p>
                     <p>Even though GeoMapper is a web app, the data you insert will be processed only by the web browser. No server-side operations or storages are performed, no one will see, touch or copy your data!</p>
@@ -59,27 +65,27 @@
             </div>
             <div id="frontpage-section-3" class="row frontpage-section">
                 <div class="offset-md-1 col-md-5">
-                    <img src = "images/screen2.png" class="leftimage frontpagescreen" alt="topic selection screen" width="500" />
+                    <img src = "images/tool.png" class="leftimage frontpagescreen" alt="topic selection screen" width="500" />
                 </div>
                 <div class="offset-md-1 col-md-4">
-                    <p class="instruction-header">2. Lorem ipsum dolor.</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>                     
+                    <p class="instruction-header">2. Explore your data</p>
+                    <p>View how your specially generated map. Understand how your data varies across UK Local Authority or Ward Boundaries. Spot patterns in your data by comparing colors.</p>                     
                 </div>
             </div>
             <div id="frontpage-section-4" class="row frontpage-section">
                 <div class="offset-md-1 col-md-4">
-                    <p class="instruction-header">3. Lorem ipsum dolor.</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <p class="instruction-header">3. Download you Maps</p>
+                    <p>Download your map or aggregated dataset. To compare the distribution of two attributes, take screenshots and place them side by side next to each other.</p>
                 </div>
                 <div class="offset-md-1 col-md-5">
-                    <img src = "images/screen3.png" alt="Analysis page screen" width="500" class="frontpagescreen" />
+                    <img src = "images/download.png" alt="Analysis page screen" width="500" class="frontpagescreen" />
                 </div>                  
             </div>
             <div id="footer" class="row">
                 <div class="col-md-12 text-center">
                     <p></p>
                     <p>This is an open source project. See the <a class="link-highlight" href="">github repository</a> for more information.</p>
-                    <img class="footer-logo" height="30px" src="images/data-collective.png" /><img class="footer-logo" height="20px" src="images/DataKindUK.png" /><img class="footer-logo" height="50px" src="images/hetco.png" />
+                    <img class="footer-logo" height="30px" src="images/data-collective.png" /><img class="footer-logo" height="20px" src="images/DataKindUK.png" /><img class="footer-logo" height="50px" src="images/download.png" />
                 </div>
             </div>
         </div>
