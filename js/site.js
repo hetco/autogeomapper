@@ -17,7 +17,7 @@ function getPostCodeData(postcode){
 				}
 				asyncCalls--;
 	    		if(asyncCalls==0){
-	    			processingComplete();
+	    			processingCompletePostcodes();
 	    		}
 	    		updateProgress()
 	  		},
@@ -25,7 +25,7 @@ function getPostCodeData(postcode){
 	  			errors.push(postcode);
 	  			asyncCalls--;
 	  			if(asyncCalls==0){
-	  				processingComplete();
+	  				processingCompletePostcodes();
 	    		}
 	    		updateProgress()
 	  		}
@@ -44,7 +44,7 @@ function cleanPostcode(postcode){
 	return postcode
 }
 
-function processingComplete(){
+function processingCompletePostcodes(){
 	//gtag('event', 'geocode_postcode', {'value':postcodeData.length});
 	if(errors.length>0){
 		$('#analysis-progress').hide();
@@ -59,6 +59,12 @@ function processingComplete(){
 		$('#step2').show();
 		let bounds = postcodesBounds(postcodeData);
 		[groupDataWards,groupDataLAs] = getGroupData(postcodeData);
+		processingComplete(groupDataWards,groupDataLAs,bounds);
+	}
+}
+
+function processingComplete(groupDataWards,groupDataLAs,bounds){
+		
 		updateDataTable(groupDataWards);
 		createMap(bounds,groupDataWards,groupDataLAs);
 
@@ -77,10 +83,6 @@ function processingComplete(){
 		    	$('#mapla').show();
 		    }
 		});
-
-
-
-	}
 }
 
 function getGroupData(postcodeData){
@@ -110,6 +112,40 @@ function getGroupData(postcodeData){
 	return [wards,las];
 }
 
+function getGroupDataFromTable(tableData){
+	let tableType = 'LA';
+	if(tableData[0].length==5){
+		tableType = 'ward'
+	}
+	groupDataWards = {}
+	groupDataLAs = {}
+	tableData.forEach(function(d,i){
+		if(i>0){
+			if(tableType=='ward'){
+				groupDataWards[d[2]] = {'value':d[4],'name':d[0],'laname':d[1],'lacode':d[3]}
+				let laCode = d[3];
+				if(laCode in groupDataLAs){
+					groupDataLAs[laCode]['value']+=parseInt(d[4]);
+				} else {
+					groupDataLAs[laCode] = {}
+					groupDataLAs[laCode]['value']=parseInt(d[4]);
+					groupDataLAs[laCode]['name']=d[0];
+				}
+			} else {
+				groupDataLAs[d[1]] = {'value':d[2],'name':d[0]}
+			}
+		}
+		
+	});
+	console.log([groupDataWards,groupDataLAs]);
+	return [groupDataWards,groupDataLAs]
+}
+
+function parseTableData(tableData){
+	let data = Papa.parse(tableData);
+	return data;
+}
+
 function updateDataTable(groupData){
 	console.log(groupData);
 	$('#datatable').html('');
@@ -128,7 +164,6 @@ function updateDataTable(groupData){
 	$('#downloaddata').on('click',function(){
 		console.log('Initiate Download');
 		generateDownload(groupData);
-		
 	});
 	
 }
@@ -159,7 +194,11 @@ function generateDownload(groupData){
 	var encodedUri = encodeURI(csvContent);
 	var link = document.createElement("a");
 	link.setAttribute("href", encodedUri);
-	link.setAttribute("download", "mapper.csv");
+	let name = $('#filename').val();
+	if(name==''){
+		name = 'mapper';
+	}
+	link.setAttribute("download", name+".csv");
 	document.body.appendChild(link);
 	link.click();
 
@@ -182,6 +221,16 @@ function init(){
 			postcode = cleanPostcode(postcode);
 			getPostCodeData(postcode);
 		});
+	});
+
+	$('.process-table').on('click',function(){
+		let tableData = $('#table_entry_text').val();
+		tableData = parseTableData(tableData);
+		console.log(tableData);
+		[wards,las] = getGroupDataFromTable(tableData.data);
+		$('#step1').hide();
+		$('#step2').show();
+		processingComplete(wards,las,[-1, 52, 1, 51]);
 	});
 
 	$('#continue').on('click',function(){

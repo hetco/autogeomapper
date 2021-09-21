@@ -23,7 +23,7 @@ function postcodesBounds(postcodes){
 }
 
 function createMap(bounds,groupDataWards,groupDataLA){
-
+	console.log(bounds);
 	let bands = getBands(groupDataWards);
 	let bandsla = getBands(groupDataLA);
 
@@ -44,7 +44,7 @@ function createMap(bounds,groupDataWards,groupDataLA){
 	    .projection(projection)
 
 
-	d3.json("../geometry/wards_simplified.geojson", function(error, wards) {
+	d3.json("../geometry/wards_simplified2.geojson", function(error, wards) {
 		var zoom = d3.behavior.zoom()
 		    .translate(projection.translate())
 		    .scale(projection.scale())
@@ -52,8 +52,23 @@ function createMap(bounds,groupDataWards,groupDataLA){
 		    .on("zoom", zoomed);
 
 		function zoomed(){
+			let scale = d3.event.scale;
+			let labels = Math.round(1000000/scale);
+			console.log(d3.event.scale);
+			console.log(labels);
 			projection.translate(d3.event.translate).scale(d3.event.scale);
 			svg.selectAll("path").attr("d", path);
+
+			svg.selectAll(".place-label")
+			.attr("x", function(d) { return path.centroid(d)[0]; })
+		    .attr("y", function(d) { return path.centroid(d)[1]; })
+		    .text(function(d,i) {
+		    	if(i%labels==0 && scale>100000){
+		    		return d.properties.WD21NM; 
+		    	} else {
+		    		return '';
+		    	}
+		    });
 		}
 
 		var svg = d3.select("#map").append("svg")
@@ -66,7 +81,8 @@ function createMap(bounds,groupDataWards,groupDataLA){
 
 	  svg.selectAll("path")
 	      .data(wards.features)
-	    .enter().append("path")
+	    .enter()
+	    	.append("path")
 	    	.attr("class", function(d,i) { return "wards"; })
 	    	.attr("d", path)
 	    	.attr('stroke','black')
@@ -75,8 +91,6 @@ function createMap(bounds,groupDataWards,groupDataLA){
 	    		if(d.properties.WD21CD in groupDataWards){
 	    			let value = groupDataWards[d.properties.WD21CD]['value']
 	    			let band = getBand(value,bands)
-	    			console.log('found');
-	    			console.log(band);
 	    			let colour = colours['a'][4-band];
 	    			return colour
 	    		} else {
@@ -85,10 +99,30 @@ function createMap(bounds,groupDataWards,groupDataLA){
 	    		
 	    	});
 
+	    let projectionScale = projection.scale()
+	    let labelsInitial = Math.round(1000000/projectionScale);
+
+		svg.selectAll(".place-label")
+		    .data(wards.features)
+		  .enter().append("text")
+		    .attr("class", "place-label")
+		    .attr("text-anchor", "middle")
+		    .attr("x", function(d) { return path.centroid(d)[0]; })
+		    .attr("y", function(d) { return path.centroid(d)[1]; })
+		    .attr("dy", ".35em")
+		    .text(function(d,i) {
+		    	if(i%labelsInitial==0 && projectionScale>100000){
+		    		return d.properties.WD21NM; 
+		    	} else {
+		    		return '';
+		    	}
+		    })
+		    .style("font-size","10px");
+
 	    drawLegend('wards',bands);
 	});
 
-	d3.json("../geometry/la_simplified2.geojson", function(error, las) {
+	d3.json("../geometry/la_simplified5.geojson", function(error, las) {
 		var zoomla = d3.behavior.zoom()
 		    .translate(projection.translate())
 		    .scale(projection.scale())
@@ -98,6 +132,20 @@ function createMap(bounds,groupDataWards,groupDataLA){
 		function zoomedla(){
 			projection.translate(d3.event.translate).scale(d3.event.scale);
 			svg.selectAll("path").attr("d", path);
+
+			let scale = d3.event.scale;
+			let labels = Math.round(50000/scale)+1;
+			labels =1 
+			svg.selectAll(".place-label")
+			.attr("x", function(d) { return path.centroid(d)[0]; })
+		    .attr("y", function(d) { return path.centroid(d)[1]; })
+		    .text(function(d,i) {
+		    	if(i%labels==0 && scale>15000){
+		    		return d.properties.lad19nm; 
+		    	} else {
+		    		return '';
+		    	}
+		    });
 		}
 
 		var svg = d3.select("#mapla").append("svg")
@@ -119,8 +167,6 @@ function createMap(bounds,groupDataWards,groupDataLA){
 	    		if(d.properties.lad19cd in groupDataLA){
 	    			let value = groupDataLA[d.properties.lad19cd]['value']
 	    			let band = getBand(value,bandsla)
-	    			console.log('found');
-	    			console.log(band);
 	    			let colour = colours['a'][4-band];
 	    			return colour
 	    		} else {
@@ -128,6 +174,26 @@ function createMap(bounds,groupDataWards,groupDataLA){
 	    		}
 	    		
 	    	});
+
+	    let projectionScale = projection.scale()
+	    let labelsInitial = Math.round(50000/projectionScale)+1;
+
+	    svg.selectAll(".place-label")
+		    .data(las.features)
+		  .enter().append("text")
+		    .attr("class", "place-label")
+		    .attr("text-anchor", "middle")
+		    .attr("x", function(d) { return path.centroid(d)[0]; })
+		    .attr("y", function(d) { return path.centroid(d)[1]; })
+		    .attr("dy", ".35em")
+		    .text(function(d,i) {
+		    	if(i%labelsInitial==0 && projectionScale>15000){
+		    		return d.properties.lad19nm; 
+		    	} else {
+		    		return '';
+		    	}
+		    })
+		    .style("font-size","10px");
 
 	    drawLegend('las',bandsla);
 	});
@@ -245,7 +311,11 @@ function downloadMap(mapLevel){
 	  var imgURL = canvas.toDataURL("image/png");
 	   DOMURL.revokeObjectURL(imgURL);
 	  var dlLink = document.createElement('a');
-	  dlLink.download = "image";
+	  let name = $('#filename').val();
+	  if(name==''){
+		name = 'mapper';
+	  }
+	  dlLink.download = name;
 	  dlLink.href = imgURL;
 	  dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href]
 	                              .join(':');
