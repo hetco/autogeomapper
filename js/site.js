@@ -57,10 +57,14 @@ function processingCompletePostcodes(){
 	} else {
 		$('#step1').hide();
 		$('#step2').show();
-		let bounds = postcodesBounds(postcodeData);
-		[groupDataWards,groupDataLAs] = getGroupData(postcodeData);
-		processingComplete(groupDataWards,groupDataLAs,bounds);
+		getBooundsAndGroupPostcodes()
 	}
+}
+
+function getBooundsAndGroupPostcodes(){
+	let bounds = postcodesBounds(postcodeData);
+	[groupDataWards,groupDataLAs] = getGroupData(postcodeData);
+	processingComplete(groupDataWards,groupDataLAs,bounds);
 }
 
 function processingComplete(groupDataWards,groupDataLAs,bounds){
@@ -236,6 +240,7 @@ function init(){
 	$('#continue').on('click',function(){
 		$('#step1').hide();
 		$('#step2').show();
+		getBooundsAndGroupPostcodes()
 	});
 
 	$('.btn-data').on('click',function(){

@@ -27,7 +27,7 @@ function createMap(bounds,groupDataWards,groupDataLA){
 	let bands = getBands(groupDataWards);
 	let bandsla = getBands(groupDataLA);
 
-	let centreX = (bounds[0] + bounds[2])/2+0.2;
+	let centreX = (bounds[0] + bounds[2])/2;
 	let centreY = (bounds[1] + bounds[3])/2;
 	let scaleZoom = 20000/Math.max(bounds[2]-bounds[0],bounds[1]-bounds[3]);
 
@@ -48,7 +48,7 @@ function createMap(bounds,groupDataWards,groupDataLA){
 		var zoom = d3.behavior.zoom()
 		    .translate(projection.translate())
 		    .scale(projection.scale())
-		    .scaleExtent([0.001, 100000000])
+		    .scaleExtent([0.001, 1000000])
 		    .on("zoom", zoomed);
 
 		function zoomed(){
@@ -100,7 +100,7 @@ function createMap(bounds,groupDataWards,groupDataLA){
 	    	});
 
 	    let projectionScale = projection.scale()
-	    let labelsInitial = Math.round(1000000/projectionScale);
+	    let labelsInitial = Math.round(2000000/projectionScale);
 
 		svg.selectAll(".place-label")
 		    .data(wards.features)
@@ -126,7 +126,7 @@ function createMap(bounds,groupDataWards,groupDataLA){
 		var zoomla = d3.behavior.zoom()
 		    .translate(projection.translate())
 		    .scale(projection.scale())
-		    .scaleExtent([0.001, 100000000])
+		    .scaleExtent([1, 1000000])
 		    .on("zoom", zoomedla);
 
 		function zoomedla(){
