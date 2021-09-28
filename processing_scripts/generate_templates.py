@@ -56,7 +56,7 @@ with open(postcodeFile) as csvfile:
 				if row[7] in processedData:
 					processedData[row[7]].append([wardName,laName,row[8],row[7]])
 				else:
-					processedData[row[7]] = [['Ward Name','La Name','Ward Code','La Code'],[wardName,laName,row[7],row[8]]]
+					processedData[row[7]] = [['Ward Name','La Name','Ward Code','La Code','Value'],[wardName,laName,row[7],row[8],'']]
 
 print('Saving New Files')
 #save one files for each la start value
