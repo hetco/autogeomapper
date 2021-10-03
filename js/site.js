@@ -126,8 +126,8 @@ function getGroupDataFromTable(tableData){
 	tableData.forEach(function(d,i){
 		if(i>0){
 			if(tableType=='ward'){
-				groupDataWards[d[2]] = {'value':d[4],'name':d[0],'laname':d[1],'lacode':d[3]}
-				let laCode = d[3];
+				groupDataWards[d[2].trim()] = {'value':d[4],'name':d[0],'laname':d[1],'lacode':d[3].trim()}
+				let laCode = d[3].trim();
 				if(laCode in groupDataLAs){
 					groupDataLAs[laCode]['value']+=parseInt(d[4]);
 				} else {
@@ -136,7 +136,8 @@ function getGroupDataFromTable(tableData){
 					groupDataLAs[laCode]['name']=d[0];
 				}
 			} else {
-				groupDataLAs[d[1]] = {'value':d[2],'name':d[0]}
+				let value = parseInt(d[2])
+				groupDataLAs[d[1].trim()] = {'value':value,'name':d[0]}
 			}
 		}
 		
@@ -182,7 +183,6 @@ function generateDownload(groupData){
 	} else {
 		var downloadData = [["LA Name","LA Code","Value"]];
 		for(key in groupData){
-			
 			downloadData.push(['"'+groupData[key]['name']+'"',key,groupData[key]['value']]);
 		}			
 	}

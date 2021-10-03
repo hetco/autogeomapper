@@ -32,19 +32,20 @@ function createMap(bounds,groupDataWards,groupDataLA){
 	let scaleZoom = 20000/Math.max(bounds[2]-bounds[0],bounds[1]-bounds[3]);
 
 
-	var width = $('#map').width(),
-	height = $('#map').height();
-
-	var projection = d3.geo.mercator()
-	  .scale(scaleZoom)
-	  .center([centreX,centreY]);
-
-
-	var path = d3.geo.path()
-	    .projection(projection)
+	var width = $('#mapsvg').width(),
+	height = $('#mapsvg').height();
 
 
 	d3.json("../geometry/wards_simplified2.geojson", function(error, wards) {
+
+		let projection = d3.geo.mercator()
+		  .scale(scaleZoom)
+		  .center([centreX,centreY]);
+
+
+		let path = d3.geo.path()
+		    .projection(projection)
+
 		var zoom = d3.behavior.zoom()
 		    .translate(projection.translate())
 		    .scale(projection.scale())
@@ -52,12 +53,16 @@ function createMap(bounds,groupDataWards,groupDataLA){
 		    .on("zoom", zoomed);
 
 		function zoomed(){
-			let scale = d3.event.scale;
-			let labels = Math.round(1000000/scale);
-			console.log(d3.event.scale);
-			console.log(labels);
+
 			projection.translate(d3.event.translate).scale(d3.event.scale);
 			svg.selectAll("path").attr("d", path);
+
+			zoomRedraw()
+		}
+
+		function zoomRedraw(){
+			let scale = projection.scale();
+			let labels = Math.round(1000000/scale);
 
 			svg.selectAll(".place-label")
 			.attr("x", function(d) { return path.centroid(d)[0]; })
@@ -71,7 +76,7 @@ function createMap(bounds,groupDataWards,groupDataLA){
 		    });
 		}
 
-		var svg = d3.select("#map").append("svg")
+		var svg = d3.select("#mapsvg").append("svg")
 		    .attr("width", width)
 		    .attr("height", height)
 		    .call(zoom);
@@ -119,10 +124,33 @@ function createMap(bounds,groupDataWards,groupDataLA){
 		    })
 		    .style("font-size","10px");
 
+		d3.select("#zoom_in").on("click", function() {
+		  zoom.scale(projection.scale()*2);
+		  projection.scale(projection.scale()*2);
+		  svg.selectAll("path").attr("d", path);
+		  zoomRedraw();
+		});
+
+		d3.select("#zoom_out").on("click", function() {
+		  zoom.scale(projection.scale()*0.5);
+		  projection.scale(projection.scale()*0.5);
+		  svg.selectAll("path").attr("d", path);
+		  zoomRedraw();
+		});
+
 	    drawLegend('wards',bands);
 	});
 
 	d3.json("../geometry/la_simplified5.geojson", function(error, las) {
+
+		let projection = d3.geo.mercator()
+		  .scale(scaleZoom)
+		  .center([centreX,centreY]);
+
+
+		let path = d3.geo.path()
+		    .projection(projection)
+
 		var zoomla = d3.behavior.zoom()
 		    .translate(projection.translate())
 		    .scale(projection.scale())
@@ -132,8 +160,11 @@ function createMap(bounds,groupDataWards,groupDataLA){
 		function zoomedla(){
 			projection.translate(d3.event.translate).scale(d3.event.scale);
 			svg.selectAll("path").attr("d", path);
+			zoomlaRedraw();
+		}
 
-			let scale = d3.event.scale;
+		function zoomlaRedraw(){
+			let scale = projection.scale();
 			let labels = Math.round(50000/scale)+1;
 			labels =1 
 			svg.selectAll(".place-label")
@@ -148,14 +179,14 @@ function createMap(bounds,groupDataWards,groupDataLA){
 		    });
 		}
 
-		var svg = d3.select("#mapla").append("svg")
+		var svg = d3.select("#maplasvg").append("svg")
 		    .attr("width", width)
 		    .attr("height", height)
 		    .call(zoomla);
 
 	    $('#canvas').attr('width',width);
 	    $('#canvas').attr('height',height);
-
+	  console.log(groupDataLA);
 	  svg.selectAll("path")
 	      .data(las.features)
 	    .enter().append("path")
@@ -195,6 +226,20 @@ function createMap(bounds,groupDataWards,groupDataLA){
 		    })
 		    .style("font-size","10px");
 
+		d3.select("#la_zoom_in").on("click", function() {
+		  console.log('here');
+		  zoomla.scale(projection.scale()*2);
+		  projection.scale(projection.scale()*2);
+		  svg.selectAll("path").attr("d", path);
+		  zoomlaRedraw();
+		});
+		d3.select("#la_zoom_out").on("click", function() {
+		  zoomla.scale(projection.scale()*0.5);
+		  projection.scale(projection.scale()*0.5);
+		  svg.selectAll("path").attr("d", path);
+		  zoomlaRedraw();
+		});
+
 	    drawLegend('las',bandsla);
 	});
 
@@ -229,9 +274,9 @@ function getBands(wards){
 
 function drawLegend(mapLevel,bands){
 	if(mapLevel =='wards'){
-		var id = '#map'
+		var id = '#mapsvg'
 	} else {
-		var id = '#mapla'
+		var id = '#maplasvg'
 	}
 	var width = $(id).width(),
 	height = $(id).height();
@@ -270,11 +315,14 @@ function drawLegend(mapLevel,bands){
   		.attr('y', function(d,i){
   			return height-25-i*30
   		})
-  		.attr("font-family", "Helvetica Neue")
+  		.attr("font-family", "Helvetica Neue, Arial")
   		.text(function(d,i){
-  			let value = ' - '+bands[i+1];
+  			let value = ' - '+(bands[i+1]);
   			if(value==' - '+undefined){
   				value = '+'
+  			}
+  			if(d == 0){
+  				return '0.1'+value;
   			}
   			return d+value;
   		});
@@ -285,7 +333,7 @@ function drawLegend(mapLevel,bands){
   		.attr('y', function(d,i){
   			return height-175
   		})
-  		.attr("font-family", "Helvetica Neue")
+  		.attr("font-family", "Helvetica Neue, Arial")
   		.text('Legend');
 }
 
@@ -293,10 +341,10 @@ function drawLegend(mapLevel,bands){
 function downloadMap(mapLevel){
 	if(mapLevel=='wards'){
 		var svgString = new XMLSerializer()
-	                .serializeToString(document.querySelector('#map svg'));
+	                .serializeToString(document.querySelector('#mapsvg svg'));
 	} else {
 		var svgString = new XMLSerializer()
-	                .serializeToString(document.querySelector('#mapla svg'));
+	                .serializeToString(document.querySelector('#maplasvg svg'));
 	}
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext("2d");
