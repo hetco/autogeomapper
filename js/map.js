@@ -259,8 +259,9 @@ function getBands(wards){
 
 	let max = 0
 	for(ward in wards){
-		if(wards[ward]['value']>max){
-			max = wards[ward]['value'];
+		let value = parseInt(wards[ward]['value']);
+		if(value>max){
+			max = value;
 		}
 	}
 	let ranges = [];
@@ -273,16 +274,17 @@ function getBands(wards){
 }
 
 function drawLegend(mapLevel,bands){
+	console.log(mapLevel);
 	if(mapLevel =='wards'){
 		var id = '#mapsvg'
 	} else {
 		var id = '#maplasvg'
 	}
-	var width = $(id).width(),
-	height = $(id).height();
+	var width = $('#mapsvg').width(),
+	height = $('#mapsvg').height();
 
 	let legend = d3.select(id).select('svg').append('g');
-
+	console.log(width);
 	legend.append('rect')
 		.attr('x', width-200)
   		.attr('y', height-200)
